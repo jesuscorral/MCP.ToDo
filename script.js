@@ -175,13 +175,49 @@ class TodoApp {
      */
     createTaskElement(task) {
         const li = document.createElement('li');
-        li.className = 'task-item';
+        li.className = `task-item${task.completed ? ' completed' : ''}`;
         li.setAttribute('data-task-id', task.id);
         li.setAttribute('role', 'listitem');
 
+        const checkboxId = `task-checkbox-${task.id}`;
+        const createdDate = new Date(task.createdAt).toLocaleDateString();
+        
         li.innerHTML = `
-            <span class="task-text">${this.escapeHtml(task.text)}</span>
+            <div class="task-checkbox-container">
+                <input 
+                    type="checkbox" 
+                    id="${checkboxId}"
+                    class="task-checkbox" 
+                    ${task.completed ? 'checked' : ''}
+                    aria-label="Mark task as ${task.completed ? 'incomplete' : 'complete'}"
+                />
+            </div>
+            <label for="${checkboxId}" class="task-text">
+                ${this.escapeHtml(task.text)}
+            </label>
+            <div class="task-metadata">
+                <span class="task-timestamp">Added ${createdDate}</span>
+                ${task.completed ? '<span class="completion-badge">✓ Done</span>' : ''}
+            </div>
         `;
+
+        // Add event listener for checkbox toggle
+        const checkbox = li.querySelector('.task-checkbox');
+        checkbox.addEventListener('change', (e) => {
+            e.stopPropagation();
+            this.toggleTaskCompletion(task.id);
+        });
+
+        // Add keyboard support for the task item
+        li.addEventListener('keydown', (e) => {
+            if (e.key === ' ' || e.key === 'Enter') {
+                e.preventDefault();
+                this.toggleTaskCompletion(task.id);
+            }
+        });
+
+        // Make task item focusable
+        li.setAttribute('tabindex', '0');
 
         return li;
     }
@@ -191,14 +227,30 @@ class TodoApp {
      */
     updateTaskCount() {
         const taskCountElement = document.getElementById('taskCount');
-        const taskCount = this.tasks.length;
+        const completedCountElement = document.getElementById('completedCount');
         
-        taskCountElement.textContent = taskCount;
+        const totalTasks = this.tasks.length;
+        const completedTasks = this.tasks.filter(task => task.completed).length;
         
-        // Update document title with task count
-        document.title = taskCount > 0 
-            ? `MCP.ToDo (${taskCount})` 
-            : 'MCP.ToDo - AI-Driven Task Management';
+        taskCountElement.textContent = totalTasks;
+        completedCountElement.textContent = completedTasks;
+        
+        // Update document title with completion status
+        if (totalTasks === 0) {
+            document.title = 'MCP.ToDo - AI-Driven Task Management';
+        } else if (completedTasks === totalTasks) {
+            document.title = `MCP.ToDo - All tasks completed! ✓`;
+        } else {
+            document.title = `MCP.ToDo (${totalTasks - completedTasks} pending)`;
+        }
+        
+        // Update completion stats visibility
+        const completionStats = document.querySelector('.completion-stats');
+        if (totalTasks > 0) {
+            completionStats.style.display = 'flex';
+        } else {
+            completionStats.style.display = 'none';
+        }
     }
 
     /**
@@ -305,14 +357,45 @@ class TodoApp {
     }
 
     /**
+     * Announce message to screen readers
+     * @param {string} message - Message to announce
+     */
+    announceToScreenReader(message) {
+        const announcement = document.createElement('div');
+        announcement.setAttribute('aria-live', 'polite');
+        announcement.setAttribute('aria-atomic', 'true');
+        announcement.className = 'sr-only';
+        announcement.textContent = message;
+        
+        document.body.appendChild(announcement);
+        
+        // Remove after announcement
+        setTimeout(() => {
+            document.body.removeChild(announcement);
+        }, 1000);
+    }
+
+    /**
      * Get application statistics
      * @returns {object} - Application statistics
      */
     getStats() {
+        const completedTasks = this.tasks.filter(task => task.completed);
+        const pendingTasks = this.tasks.filter(task => !task.completed);
+        
         return {
             totalTasks: this.tasks.length,
-            completedTasks: this.tasks.filter(task => task.completed).length,
-            pendingTasks: this.tasks.filter(task => !task.completed).length
+            completedTasks: completedTasks.length,
+            pendingTasks: pendingTasks.length,
+            completionRate: this.tasks.length > 0 
+                ? Math.round((completedTasks.length / this.tasks.length) * 100) 
+                : 0,
+            completedToday: completedTasks.filter(task => {
+                if (!task.completedAt) return false;
+                const today = new Date().toDateString();
+                const completedDate = new Date(task.completedAt).toDateString();
+                return today === completedDate;
+            }).length
         };
     }
 }
