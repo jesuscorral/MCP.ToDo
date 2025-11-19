@@ -195,6 +195,19 @@ class TodoApp {
                 <span class="task-timestamp">Added ${createdDate}</span>
                 ${task.completed ? '<span class="completion-badge">✓ Done</span>' : ''}
             </div>
+            <div class="task-actions">
+                <button 
+                    class="delete-btn" 
+                    type="button"
+                    aria-label="Delete task: ${this.escapeHtml(task.text)}"
+                    title="Delete task"
+                >
+                    <svg class="delete-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M2 4H14M6 4V2.5C6 1.67157 6.67157 1 7.5 1H8.5C9.32843 1 10 1.67157 10 2.5V4M5 6V13C5 13.5523 5.44772 14 6 14H10C10.5523 14 11 13.5523 11 13V6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M7 8V11M9 8V11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </button>
+            </div>
         `;
 
         // Add event listener for checkbox toggle
@@ -204,11 +217,21 @@ class TodoApp {
             this.toggleTaskCompletion(task.id);
         });
 
+        // Add event listener for delete button
+        const deleteBtn = li.querySelector('.delete-btn');
+        deleteBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            this.handleTaskDeletion(task.id);
+        });
+
         // Add keyboard support for the task item
         li.addEventListener('keydown', (e) => {
             if (e.key === ' ' || e.key === 'Enter') {
                 e.preventDefault();
                 this.toggleTaskCompletion(task.id);
+            } else if (e.key === 'Delete' || e.key === 'Backspace') {
+                e.preventDefault();
+                this.handleTaskDeletion(task.id);
             }
         });
 
