@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MCP.ToDo - AI-Driven Task Management</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="app-container">
+        <header class="app-header">
+            <h1 class="app-title">MCP.ToDo</h1>
+            <p class="app-subtitle">AI-Driven Task Management</p>
+        </header>
+
+        <main class="main-content">
+            <!-- Add Task Section -->
+            <section class="add-task-section" aria-label="Add new task">
+                <div class="add-task-container">
+                    <div class="input-group">
+                        <input 
+                            type="text" 
+                            id="taskInput" 
+                            class="task-input" 
+                            placeholder="Enter a new task..." 
+                            aria-label="New task description"
+                            autocomplete="off"
+                        />
+                        <button 
+                            id="addTaskBtn" 
+                            class="add-task-btn" 
+                            type="button"
+                            aria-label="Add task"
+                        >
+                            <svg class="add-icon" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M10 4V16M4 10H16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                            </svg>
+                            Add Task
+                        </button>
+                    </div>
+                    <div id="inputError" class="error-message" role="alert" aria-live="polite"></div>
+                    <div id="successMessage" class="success-message" role="status" aria-live="polite"></div>
+                </div>
+            </section>
+
+            <!-- Task List Section -->
+            <section class="task-list-section" aria-label="Task list">
+                <div class="task-list-header">
+                    <h2 class="section-title">Your Tasks</h2>
+                    <div class="task-count">
+                        <span id="taskCount" class="count-number">0</span>
+                        <span class="count-label">tasks</span>
+                    </div>
+                </div>
+                
+                <div class="task-list-container">
+                    <ul id="taskList" class="task-list" role="list">
+                        <!-- Tasks will be dynamically added here -->
+                    </ul>
+                    
+                    <!-- Empty state -->
+                    <div id="emptyState" class="empty-state">
+                        <div class="empty-icon">
+                            <svg width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <circle cx="32" cy="32" r="30" stroke="currentColor" stroke-width="2" stroke-dasharray="4 4"/>
+                                <path d="M32 20V44M20 32H44" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                            </svg>
+                        </div>
+                        <h3 class="empty-title">No tasks yet</h3>
+                        <p class="empty-description">Add your first task above to get started</p>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <footer class="app-footer">
+            <p class="footer-text">
+                Part of the <strong>MCP.ToDo</strong> proof of concept - 
+                <a href="https://github.com/jesuscorral/MCP.ToDo" target="_blank" rel="noopener noreferrer">
+                    View on GitHub
+                </a>
+            </p>
+        </footer>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
