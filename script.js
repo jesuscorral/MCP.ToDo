@@ -101,7 +101,11 @@ class TodoApp {
 
         // Check for duplicate tasks
         const isDuplicate = this.tasks.some(task => 
+<<<<<<< HEAD
             task.text.toLowerCase() === taskText.toLowerCase()
+=======
+            task.text === taskText
+>>>>>>> ccf3ffd3851a889398209711b13b7527e1cdbf3f
         );
 
         if (isDuplicate) {

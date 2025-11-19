@@ -468,7 +468,11 @@ body {
 @media (prefers-contrast: high) {
     :root {
         --border-light: #000000;
+<<<<<<< HEAD
         --border-medium: #000000;
+=======
+        --border-medium: currentColor;
+>>>>>>> ccf3ffd3851a889398209711b13b7527e1cdbf3f
     }
     
     .task-input:focus {
