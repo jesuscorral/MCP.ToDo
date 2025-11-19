@@ -276,12 +276,48 @@ class TodoApp {
         // Auto-hide success message
         setTimeout(() => this.clearMessages(), 1500);
         
-        // Announce to screen readers
+        // Provide user feedback
         this.announceToScreenReader(
             task.completed 
                 ? `Task "${task.text}" marked as complete`
                 : `Task "${task.text}" marked as incomplete`
         );
+    }
+
+    /**
+     * Handle task deletion with confirmation
+     * @param {number} taskId - The ID of the task to delete
+     */
+    handleTaskDeletion(taskId) {
+        const task = this.tasks.find(t => t.id === taskId);
+        if (!task) {
+            console.error(`Task with ID ${taskId} not found`);
+            return;
+        }
+
+        // Show confirmation dialog
+        const confirmed = confirm(`Are you sure you want to delete the task "${task.text}"?`);
+        if (!confirmed) {
+            return;
+        }
+
+        // Remove task from array
+        const taskIndex = this.tasks.findIndex(t => t.id === taskId);
+        if (taskIndex === -1) {
+            console.error(`Task with ID ${taskId} not found in array`);
+            return;
+        }
+
+        this.tasks.splice(taskIndex, 1);
+
+        // Update storage and UI
+        this.saveTasksToStorage();
+        this.renderTasks();
+        this.updateTaskCount();
+
+        // Provide user feedback
+        this.announceToScreenReader(`Task "${task.text}" has been deleted`);
+        this.showSuccessMessage(`Task "${task.text}" deleted successfully`);
     }
 
     /**
