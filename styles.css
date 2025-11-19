@@ -575,7 +575,7 @@ body {
     .task-list-header {
         flex-direction: column;
         align-items: stretch;
-        gap: var(--spacing-sm);
+        gap: var(--spacing-xs);
     }
     
     .task-progress {
