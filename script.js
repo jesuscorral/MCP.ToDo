@@ -101,11 +101,7 @@ class TodoApp {
 
         // Check for duplicate tasks
         const isDuplicate = this.tasks.some(task => 
-<<<<<<< HEAD
             task.text.toLowerCase() === taskText.toLowerCase()
-=======
-            task.text === taskText
->>>>>>> ccf3ffd3851a889398209711b13b7527e1cdbf3f
         );
 
         if (isDuplicate) {
@@ -223,6 +219,86 @@ class TodoApp {
     }
 
     /**
+     * Toggle the completion status of a task
+     * @param {number} taskId - The ID of the task to toggle
+     */
+    toggleTaskCompletion(taskId) {
+        const task = this.tasks.find(t => t.id === taskId);
+        if (!task) {
+            console.error(`Task with ID ${taskId} not found`);
+            return;
+        }
+
+        // Toggle completion status
+        task.completed = !task.completed;
+        task.updatedAt = new Date().toISOString();
+        
+        if (task.completed) {
+            task.completedAt = new Date().toISOString();
+        } else {
+            delete task.completedAt;
+        }
+
+        // Update storage and UI
+        this.saveTasksToStorage();
+        this.updateTaskElement(task);
+        this.updateTaskCount();
+        
+        // Provide user feedback
+        const message = task.completed 
+            ? 'Task marked as complete!' 
+            : 'Task marked as incomplete';
+        this.showSuccessMessage(message);
+        
+        // Auto-hide success message
+        setTimeout(() => this.clearMessages(), 1500);
+        
+        // Announce to screen readers
+        this.announceToScreenReader(
+            task.completed 
+                ? `Task "${task.text}" marked as complete`
+                : `Task "${task.text}" marked as incomplete`
+        );
+    }
+
+    /**
+     * Update a specific task element in the UI
+     * @param {object} task - The task object to update
+     */
+    updateTaskElement(task) {
+        const taskElement = document.querySelector(`[data-task-id="${task.id}"]`);
+        if (!taskElement) return;
+
+        const checkbox = taskElement.querySelector('.task-checkbox');
+        const metadata = taskElement.querySelector('.task-metadata');
+        
+        // Update completion class and checkbox state
+        if (task.completed) {
+            taskElement.classList.add('completed');
+            checkbox.checked = true;
+            checkbox.setAttribute('aria-label', 'Mark task as incomplete');
+            
+            // Add completion badge if not exists
+            if (!metadata.querySelector('.completion-badge')) {
+                const badge = document.createElement('span');
+                badge.className = 'completion-badge';
+                badge.innerHTML = '✓ Done';
+                metadata.appendChild(badge);
+            }
+        } else {
+            taskElement.classList.remove('completed');
+            checkbox.checked = false;
+            checkbox.setAttribute('aria-label', 'Mark task as complete');
+            
+            // Remove completion badge
+            const badge = metadata.querySelector('.completion-badge');
+            if (badge) {
+                badge.remove();
+            }
+        }
+    }
+
+    /**
      * Update the task counter display
      */
     updateTaskCount() {
@@ -246,12 +322,15 @@ class TodoApp {
         
         // Update completion stats visibility
         const completionStats = document.querySelector('.completion-stats');
-        if (totalTasks > 0) {
-            completionStats.style.display = 'flex';
-        } else {
-            completionStats.style.display = 'none';
+        if (completionStats) {
+            if (totalTasks > 0) {
+                completionStats.style.display = 'flex';
+            } else {
+                completionStats.style.display = 'none';
+            }
         }
     }
+
 
     /**
      * Show error message to user
