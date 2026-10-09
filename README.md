@@ -2,11 +2,13 @@
 
 **A Proof of Concept: From Idea to Code Merge Using GitHub MCP and AI Agents**
 
+> 📝 **Origin of this project:** This repository was built as the result of following, step by step, the workflow described in my LinkedIn article **[From PBI to PR: GitHub MCP + AI Agents](https://www.linkedin.com/pulse/from-pbi-pr-github-mcp-ai-agents-jes%C3%BAs-corral-93l6e/)**. Every issue, branch, pull request and merge in this repo is a hands-on application of the process explained there.
+
 ## 📖 Overview
 
 This project serves as a **proof of concept** demonstrating how modern AI development workflows can streamline the entire software development lifecycle - from initial idea conception to final code merge - using GitHub's Model Context Protocol (MCP) and AI agents.
 
-Based on insights shared in my [LinkedIn article]([https://linkedin.com/in/jesuscorral](https://www.linkedin.com/pulse/from-pbi-pr-github-mcp-ai-agents-jes%C3%BAs-corral-93l6e)), this repository showcases how developers can leverage AI-powered tools to create a complete development pipeline that handles:
+Based on the steps shared in my [LinkedIn article](https://www.linkedin.com/pulse/from-pbi-pr-github-mcp-ai-agents-jes%C3%BAs-corral-93l6e/), this repository showcases how developers can leverage AI-powered tools to create a complete development pipeline that handles:
 
 - ✨ **Idea Generation & Planning**
 - 🏗️ **Project Architecture & Setup**
